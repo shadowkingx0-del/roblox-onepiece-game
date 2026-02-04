@@ -9,6 +9,16 @@ local blockHealth = {} -- Block'un sağlığı
 
 local MAX_BLOCK_HEALTH = 100 -- Block'un maksimum sağlığı
 
+-- Helper function to check if a character is blocking
+local function isCharacterBlocking(character)
+	if not character then return false end
+	
+	local player = game:GetService("Players"):GetPlayerFromCharacter(character)
+	if not player then return false end
+	
+	return blockingPlayers[player] == true
+end
+
 -- RemoteEvents
 local blockEvent = ReplicatedStorage:FindFirstChild("PlayerBlock")
 if not blockEvent then
@@ -29,6 +39,19 @@ if not dealDamageToPlayer then
 	dealDamageToPlayer = Instance.new("RemoteEvent")
 	dealDamageToPlayer.Name = "DealDamageToPlayer"
 	dealDamageToPlayer.Parent = ReplicatedStorage
+end
+
+-- Create a function to check if a character is blocking
+local checkBlockingFunction = ReplicatedStorage:FindFirstChild("CheckBlocking")
+if not checkBlockingFunction then
+	checkBlockingFunction = Instance.new("RemoteFunction")
+	checkBlockingFunction.Name = "CheckBlocking"
+	checkBlockingFunction.Parent = ReplicatedStorage
+end
+
+-- Handle checking if character is blocking
+checkBlockingFunction.OnServerInvoke = function(_, character)
+	return isCharacterBlocking(character)
 end
 
 -- Oyuncu giriş yaptığında

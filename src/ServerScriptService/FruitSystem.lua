@@ -40,6 +40,8 @@ local FRUITS = {
 				Description = "Yere basarak ilerleyen buz yığını, yukarı fırlatır"
 			}
 		}
+	}
+}
 
 -- Fruit spawn takibi
 local fruitSpawns = {
@@ -108,10 +110,7 @@ eatFruitEvent.OnServerEvent:Connect(function(player, fruitName)
 		return
 	end
 
-			-- Meyveyi ver
-			activeFruit.Value = FRUIT_TYPE
-			print("✅✅✅ ActiveFruit set edildi: " .. activeFruit.Value)
-
+	-- Meyveyi ver
 	activeFruit.Value = fruitName
 
 	print("✅✅✅ " .. player.Name .. " → " .. fruit.DisplayName .. " KAZANDI!")
@@ -188,39 +187,39 @@ eatFruitEvent.OnServerEvent:Connect(function(player, fruitName)
 	end)
 end)
 
-		-- Meyve bilgisi gönder
-		getFruitInfoEvent.OnServerInvoke = function(player)
-			print("📡 GetFruitInfo çağrıldı: " .. player.Name)  -- DEBUG ekle
+-- Meyve bilgisi gönder
+getFruitInfoEvent.OnServerInvoke = function(player)
+	print("📡 GetFruitInfo çağrıldı: " .. player.Name)  -- DEBUG ekle
 
-			local playerData = player:FindFirstChild("PlayerData")
-			if not playerData then 
-				print("❌ PlayerData yok!")
-				return nil 
-			end
+	local playerData = player:FindFirstChild("PlayerData")
+	if not playerData then 
+		print("❌ PlayerData yok!")
+		return nil 
+	end
 
-			local activeFruit = playerData:FindFirstChild("ActiveFruit")
-			if not activeFruit or activeFruit.Value == "" then
-				print("❌ ActiveFruit yok veya boş!")
-				return nil
-			end
+	local activeFruit = playerData:FindFirstChild("ActiveFruit")
+	if not activeFruit or activeFruit.Value == "" then
+		print("❌ ActiveFruit yok veya boş!")
+		return nil
+	end
 
-			print("✅ Active Fruit: " .. activeFruit.Value)
+	print("✅ Active Fruit: " .. activeFruit.Value)
 
-			local fruitData = FRUITS[activeFruit.Value]
-			if not fruitData then 
-				print("❌ FruitData bulunamadı!")
-				return nil 
-			end
+	local fruitData = FRUITS[activeFruit.Value]
+	if not fruitData then 
+		print("❌ FruitData bulunamadı!")
+		return nil 
+	end
 
-			print("✅ FruitData bulundu: " .. fruitData.DisplayName)
+	print("✅ FruitData bulundu: " .. fruitData.DisplayName)
 
-			return {
-				FruitId = activeFruit.Value,
-				Name = fruitData.Name,
-				DisplayName = fruitData.DisplayName,
-				Skills = fruitData.Skills
-			}
-		end
+	return {
+		FruitId = activeFruit.Value,
+		Name = fruitData.Name,
+		DisplayName = fruitData.DisplayName,
+		Skills = fruitData.Skills
+	}
+end
 
 -- Meyve skill kullanımı
 useFruitSkillEvent.OnServerEvent:Connect(function(player, skillName, targetOrPosition)
@@ -262,8 +261,8 @@ useFruitSkillEvent.OnServerEvent:Connect(function(player, skillName, targetOrPos
 		end
 	end
 
-			-- Skill efektleri
-			if skillName == "Ice Spear" then
+	-- Skill efektleri
+	if skillName == "Ice Spear" then
 				if targetOrPosition and targetOrPosition:IsA("Model") then
 					local humanoid = targetOrPosition:FindFirstChildOfClass("Humanoid")
 					local rootPart = targetOrPosition:FindFirstChild("HumanoidRootPart")
@@ -396,6 +395,8 @@ useFruitSkillEvent.OnServerEvent:Connect(function(player, skillName, targetOrPos
 						end
 					end
 				end
-			end
+		end
+	end
+end)
 
 print("✅ Fruit System hazır!")

@@ -58,9 +58,28 @@ local function performCombo(enemy, target)
 
 	if not enemyRoot or not targetRoot then return end
 
+	-- Check if target is blocking BEFORE starting combo
+	local checkBlockingFunction = ReplicatedStorage:FindFirstChild("CheckBlocking")
+	if checkBlockingFunction then
+		local isTargetBlocking = checkBlockingFunction:InvokeServer(target)
+		if isTargetBlocking then
+			print("🛡️ Hedef block yapıyor! Kombo iptal edildi!")
+			return
+		end
+	end
+
 	print("🥊 " .. enemy.Name .. " kombo başlatıyor!")
 
 	for comboNum = 1, COMBO_SIZE do
+		-- Check if target started blocking during combo
+		if checkBlockingFunction then
+			local isTargetBlocking = checkBlockingFunction:InvokeServer(target)
+			if isTargetBlocking then
+				print("🛡️ Hedef block başlattı! Kombo durduruluyor!")
+				break
+			end
+		end
+
 		-- Hedef hala menzilde mi kontrol et
 		local distance = (enemyRoot.Position - targetRoot.Position).Magnitude
 		if distance > ATTACK_RANGE + 2 then
@@ -68,7 +87,7 @@ local function performCombo(enemy, target)
 			break
 		end
 
-		-- Hedefe bak
+		-- Hedefe bak (only if not blocking)
 		enemyRoot.CFrame = CFrame.new(enemyRoot.Position, Vector3.new(targetRoot.Position.X, enemyRoot.Position.Y, targetRoot.Position.Z))
 
 		-- Saldır

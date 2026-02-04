@@ -53,7 +53,7 @@ end
 checkBlockingFunction.OnInvoke = function(character)
 	-- Validate input
 	if not character or not character:IsA("Model") then
-		warn("CheckBlocking: Geçersiz karakter parametresi (Model beklendi, alındı: " .. type(character) .. ")")
+		warn("CheckBlocking: Geçersiz karakter parametresi (Model beklendi, alındı: " .. type(character) .. "). Lütfen geçerli bir karakter modeli gönderin.")
 		return false
 	end
 	

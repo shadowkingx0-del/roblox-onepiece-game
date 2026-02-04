@@ -90,7 +90,7 @@ local function performCombo(enemy, target)
 				break
 			elseif not success then
 				warn("Kombo sırasında block kontrolü hatası: " .. tostring(result))
-				-- Hata durumunda kombo devam eder (break olmadığı için)
+				-- Hata durumunda kombo devam eder (güvenli varsayılan davranış)
 			end
 		end
 
@@ -101,7 +101,7 @@ local function performCombo(enemy, target)
 			break
 		end
 
-		-- Hedefe bak (düşman döndürülür, hedefin pozisyonu değiştirilmez)
+		-- Hedefe bak (Y pozisyonu korunarak yatay düzlemde döndürülür, böylece düşman eğilmez)
 		enemyRoot.CFrame = CFrame.new(enemyRoot.Position, Vector3.new(targetRoot.Position.X, enemyRoot.Position.Y, targetRoot.Position.Z))
 
 		-- Saldır

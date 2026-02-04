@@ -61,15 +61,15 @@ local function performCombo(enemy, target)
 	-- Check if target is blocking BEFORE starting combo
 	local checkBlockingFunction = ReplicatedStorage:FindFirstChild("CheckBlocking")
 	if checkBlockingFunction then
-		local success, isTargetBlocking = pcall(function()
+		local success, result = pcall(function()
 			return checkBlockingFunction:Invoke(target)
 		end)
 		
-		if success and isTargetBlocking then
+		if success and result then
 			print("🛡️ Hedef block yapıyor! Kombo iptal edildi!")
 			return
 		elseif not success then
-			warn("Block kontrolü hatası: " .. tostring(isTargetBlocking))
+			warn("Block kontrolü hatası: " .. tostring(result))
 		end
 	end
 
@@ -78,15 +78,15 @@ local function performCombo(enemy, target)
 	for comboNum = 1, COMBO_SIZE do
 		-- Check if target started blocking during combo
 		if checkBlockingFunction then
-			local success, isTargetBlocking = pcall(function()
+			local success, result = pcall(function()
 				return checkBlockingFunction:Invoke(target)
 			end)
 			
-			if success and isTargetBlocking then
+			if success and result then
 				print("🛡️ Hedef block başlattı! Kombo durduruluyor!")
 				break
 			elseif not success then
-				warn("Kombo sırasında block kontrolü hatası: " .. tostring(isTargetBlocking))
+				warn("Kombo sırasında block kontrolü hatası: " .. tostring(result))
 				-- Kombo sistemini bozmamak için hatada bile devam et
 			end
 		end

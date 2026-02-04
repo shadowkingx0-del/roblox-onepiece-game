@@ -41,16 +41,16 @@ if not dealDamageToPlayer then
 	dealDamageToPlayer.Parent = ReplicatedStorage
 end
 
--- Create a function to check if a character is blocking
+-- Create a BindableFunction for server-to-server communication to check blocking
 local checkBlockingFunction = ReplicatedStorage:FindFirstChild("CheckBlocking")
 if not checkBlockingFunction then
-	checkBlockingFunction = Instance.new("RemoteFunction")
+	checkBlockingFunction = Instance.new("BindableFunction")
 	checkBlockingFunction.Name = "CheckBlocking"
 	checkBlockingFunction.Parent = ReplicatedStorage
 end
 
 -- Handle checking if character is blocking
-checkBlockingFunction.OnServerInvoke = function(_, character)
+checkBlockingFunction.OnInvoke = function(character)
 	return isCharacterBlocking(character)
 end
 

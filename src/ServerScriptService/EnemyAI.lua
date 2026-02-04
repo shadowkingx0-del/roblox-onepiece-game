@@ -61,7 +61,7 @@ local function performCombo(enemy, target)
 	-- Check if target is blocking BEFORE starting combo
 	local checkBlockingFunction = ReplicatedStorage:FindFirstChild("CheckBlocking")
 	if checkBlockingFunction then
-		local isTargetBlocking = checkBlockingFunction:InvokeServer(target)
+		local isTargetBlocking = checkBlockingFunction:Invoke(target)
 		if isTargetBlocking then
 			print("🛡️ Hedef block yapıyor! Kombo iptal edildi!")
 			return
@@ -73,7 +73,7 @@ local function performCombo(enemy, target)
 	for comboNum = 1, COMBO_SIZE do
 		-- Check if target started blocking during combo
 		if checkBlockingFunction then
-			local isTargetBlocking = checkBlockingFunction:InvokeServer(target)
+			local isTargetBlocking = checkBlockingFunction:Invoke(target)
 			if isTargetBlocking then
 				print("🛡️ Hedef block başlattı! Kombo durduruluyor!")
 				break
@@ -87,7 +87,8 @@ local function performCombo(enemy, target)
 			break
 		end
 
-		-- Hedefe bak (only if not blocking)
+		-- Hedefe bak (only rotate enemy, don't manipulate target)
+		-- This prevents the character freeze issue
 		enemyRoot.CFrame = CFrame.new(enemyRoot.Position, Vector3.new(targetRoot.Position.X, enemyRoot.Position.Y, targetRoot.Position.Z))
 
 		-- Saldır

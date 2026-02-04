@@ -9,6 +9,16 @@ local blockHealth = {} -- Block'un sağlığı
 
 local MAX_BLOCK_HEALTH = 100 -- Block'un maksimum sağlığı
 
+-- Helper function to check if a character is blocking
+local function isCharacterBlocking(character)
+	if not character then return false end
+	
+	local player = game:GetService("Players"):GetPlayerFromCharacter(character)
+	if not player then return false end
+	
+	return blockingPlayers[player] == true
+end
+
 -- RemoteEvents
 local blockEvent = ReplicatedStorage:FindFirstChild("PlayerBlock")
 if not blockEvent then
@@ -29,6 +39,34 @@ if not dealDamageToPlayer then
 	dealDamageToPlayer = Instance.new("RemoteEvent")
 	dealDamageToPlayer.Name = "DealDamageToPlayer"
 	dealDamageToPlayer.Parent = ReplicatedStorage
+end
+
+-- Create a BindableFunction for server-to-server communication to check blocking
+local checkBlockingFunction = ReplicatedStorage:FindFirstChild("CheckBlocking")
+if not checkBlockingFunction then
+	checkBlockingFunction = Instance.new("BindableFunction")
+	checkBlockingFunction.Name = "CheckBlocking"
+	checkBlockingFunction.Parent = ReplicatedStorage
+end
+
+-- Handle checking if character is blocking
+checkBlockingFunction.OnInvoke = function(character)
+	-- Validate input
+	if not character or not character:IsA("Model") then
+		warn("CheckBlocking: Geçersiz karakter parametresi (Model beklendi, alındı: " .. type(character) .. "). Lütfen geçerli bir karakter modeli gönderin.")
+		return false
+	end
+	
+	local success, result = pcall(function()
+		return isCharacterBlocking(character)
+	end)
+	
+	if not success then
+		warn("CheckBlocking hatası: " .. tostring(result))
+		return false
+	end
+	
+	return result
 end
 
 -- Oyuncu giriş yaptığında

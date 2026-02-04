@@ -58,9 +58,42 @@ local function performCombo(enemy, target)
 
 	if not enemyRoot or not targetRoot then return end
 
+	-- Cache the blocking function lookup to avoid repeated FindFirstChild calls
+	local checkBlockingFunction = ReplicatedStorage:FindFirstChild("CheckBlocking")
+
+	-- Check if target is blocking BEFORE starting combo
+	if checkBlockingFunction then
+		local success, result = pcall(function()
+			return checkBlockingFunction:Invoke(target)
+		end)
+		
+		if success and result then
+			print("🛡️ Hedef block yapıyor! Kombo iptal edildi!")
+			return
+		elseif not success then
+			warn("Block kontrolü hatası: " .. tostring(result))
+		end
+	end
+
 	print("🥊 " .. enemy.Name .. " kombo başlatıyor!")
 
 	for comboNum = 1, COMBO_SIZE do
+		-- Check if target started blocking during combo
+		-- Block kontrolleri karakterin donmasını önler
+		if checkBlockingFunction then
+			local success, result = pcall(function()
+				return checkBlockingFunction:Invoke(target)
+			end)
+			
+			if success and result then
+				print("🛡️ Hedef block başlattı! Kombo durduruluyor!")
+				break
+			elseif not success then
+				warn("Kombo sırasında block kontrolü hatası: " .. tostring(result))
+				-- Hata durumunda kombo devam eder (güvenli varsayılan davranış)
+			end
+		end
+
 		-- Hedef hala menzilde mi kontrol et
 		local distance = (enemyRoot.Position - targetRoot.Position).Magnitude
 		if distance > ATTACK_RANGE + 2 then
@@ -68,7 +101,7 @@ local function performCombo(enemy, target)
 			break
 		end
 
-		-- Hedefe bak
+		-- Hedefe bak (Y pozisyonu korunarak yatay düzlemde döndürülür, böylece düşman eğilmez)
 		enemyRoot.CFrame = CFrame.new(enemyRoot.Position, Vector3.new(targetRoot.Position.X, enemyRoot.Position.Y, targetRoot.Position.Z))
 
 		-- Saldır

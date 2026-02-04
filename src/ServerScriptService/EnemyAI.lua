@@ -87,7 +87,7 @@ local function performCombo(enemy, target)
 				break
 			elseif not success then
 				warn("Kombo sırasında block kontrolü hatası: " .. tostring(result))
-				-- Kombo sistemini bozmamak için hatada bile devam et
+				-- Kombo sistemini bozmamak için hata durumunda bile devam et
 			end
 		end
 

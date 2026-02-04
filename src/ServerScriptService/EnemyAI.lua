@@ -98,8 +98,8 @@ local function performCombo(enemy, target)
 			break
 		end
 
-		-- Hedefe bak (düşman karakteri döndür, hedefi manipüle etme)
-		-- Bu, karakter donma sorununu önler
+		-- Hedefe bak (düşman döndürülür, hedefin pozisyonu değiştirilmez)
+		-- Yukarıdaki block kontrolleri karakterin donmasını önler
 		enemyRoot.CFrame = CFrame.new(enemyRoot.Position, Vector3.new(targetRoot.Position.X, enemyRoot.Position.Y, targetRoot.Position.Z))
 
 		-- Saldır

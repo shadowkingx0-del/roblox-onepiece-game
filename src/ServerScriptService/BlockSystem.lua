@@ -51,7 +51,22 @@ end
 
 -- Handle checking if character is blocking
 checkBlockingFunction.OnInvoke = function(character)
-	return isCharacterBlocking(character)
+	-- Validate input
+	if not character or not character:IsA("Model") then
+		warn("CheckBlocking: Invalid character parameter")
+		return false
+	end
+	
+	local success, result = pcall(function()
+		return isCharacterBlocking(character)
+	end)
+	
+	if not success then
+		warn("CheckBlocking error: " .. tostring(result))
+		return false
+	end
+	
+	return result
 end
 
 -- Oyuncu giriş yaptığında

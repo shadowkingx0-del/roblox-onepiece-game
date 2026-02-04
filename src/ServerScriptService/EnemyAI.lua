@@ -58,8 +58,10 @@ local function performCombo(enemy, target)
 
 	if not enemyRoot or not targetRoot then return end
 
-	-- Check if target is blocking BEFORE starting combo
+	-- Cache the blocking function lookup to avoid repeated FindFirstChild calls
 	local checkBlockingFunction = ReplicatedStorage:FindFirstChild("CheckBlocking")
+
+	-- Check if target is blocking BEFORE starting combo
 	if checkBlockingFunction then
 		local success, result = pcall(function()
 			return checkBlockingFunction:Invoke(target)

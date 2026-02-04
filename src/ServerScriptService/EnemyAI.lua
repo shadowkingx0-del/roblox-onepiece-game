@@ -79,6 +79,7 @@ local function performCombo(enemy, target)
 
 	for comboNum = 1, COMBO_SIZE do
 		-- Check if target started blocking during combo
+		-- Block kontrolleri karakterin donmasını önler
 		if checkBlockingFunction then
 			local success, result = pcall(function()
 				return checkBlockingFunction:Invoke(target)
@@ -89,7 +90,7 @@ local function performCombo(enemy, target)
 				break
 			elseif not success then
 				warn("Kombo sırasında block kontrolü hatası: " .. tostring(result))
-				-- Kombo sistemini bozmamak için hata durumunda bile devam et
+				-- Hata durumunda kombo devam eder (break olmadığı için)
 			end
 		end
 
@@ -101,7 +102,6 @@ local function performCombo(enemy, target)
 		end
 
 		-- Hedefe bak (düşman döndürülür, hedefin pozisyonu değiştirilmez)
-		-- Yukarıdaki block kontrolleri karakterin donmasını önler
 		enemyRoot.CFrame = CFrame.new(enemyRoot.Position, Vector3.new(targetRoot.Position.X, enemyRoot.Position.Y, targetRoot.Position.Z))
 
 		-- Saldır

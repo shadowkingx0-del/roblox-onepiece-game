@@ -69,7 +69,7 @@ local function performCombo(enemy, target)
 			print("🛡️ Hedef block yapıyor! Kombo iptal edildi!")
 			return
 		elseif not success then
-			warn("Error checking blocking state: " .. tostring(isTargetBlocking))
+			warn("Block kontrolü hatası: " .. tostring(isTargetBlocking))
 		end
 	end
 
@@ -86,8 +86,8 @@ local function performCombo(enemy, target)
 				print("🛡️ Hedef block başlattı! Kombo durduruluyor!")
 				break
 			elseif not success then
-				warn("Error checking blocking state during combo: " .. tostring(isTargetBlocking))
-				-- Continue combo even if check fails to avoid breaking combat
+				warn("Kombo sırasında block kontrolü hatası: " .. tostring(isTargetBlocking))
+				-- Kombo sistemini bozmamak için hatada bile devam et
 			end
 		end
 
@@ -98,8 +98,8 @@ local function performCombo(enemy, target)
 			break
 		end
 
-		-- Hedefe bak (only rotate enemy, don't manipulate target)
-		-- This prevents the character freeze issue
+		-- Hedefe bak (düşman karakteri döndür, hedefi manipüle etme)
+		-- Bu, karakter donma sorununu önler
 		enemyRoot.CFrame = CFrame.new(enemyRoot.Position, Vector3.new(targetRoot.Position.X, enemyRoot.Position.Y, targetRoot.Position.Z))
 
 		-- Saldır

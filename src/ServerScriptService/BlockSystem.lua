@@ -53,7 +53,7 @@ end
 checkBlockingFunction.OnInvoke = function(character)
 	-- Validate input
 	if not character or not character:IsA("Model") then
-		warn("CheckBlocking: Invalid character parameter")
+		warn("CheckBlocking: Geçersiz karakter parametresi (expected Model, got " .. type(character) .. ")")
 		return false
 	end
 	
@@ -62,7 +62,7 @@ checkBlockingFunction.OnInvoke = function(character)
 	end)
 	
 	if not success then
-		warn("CheckBlocking error: " .. tostring(result))
+		warn("CheckBlocking hatası: " .. tostring(result))
 		return false
 	end
 	
